@@ -20,7 +20,7 @@ def serializable():
 
         # Transaction 1 [BEFORE]: SERIALIZABLE
         print(f"Transaction 1 started: {datetime.now()}")
-        connection1.start_transaction(isolation_level='REPEATABLE READ')
+        connection1.start_transaction(isolation_level='SERIALIZABLE')
         cursor1.execute("SELECT COUNT(*) FROM accounts WHERE name = 'Tom'")
         count_serializable = cursor1.fetchone()[0]
 
@@ -28,7 +28,7 @@ def serializable():
 
         # Transaction 2: SERIALIZABLE
         print(f"Transaction 2 started: {datetime.now()}")
-        connection2.start_transaction(isolation_level='REPEATABLE READ')
+        connection2.start_transaction(isolation_level='SERIALIZABLE')
         cursor2.execute("INSERT INTO accounts (name, balance) VALUES ('Tom', 1212)")
         print(f"Transaction 2 commit(): {datetime.now()}")
         connection2.commit()

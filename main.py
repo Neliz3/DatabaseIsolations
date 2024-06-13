@@ -8,6 +8,6 @@ from deadlock import deadlock
 if __name__ == "__main__":
     # dirty_read()
     # non_repeatable_reads()
-    # phantom_reads()
+    phantom_reads()
     # serializable()
-    deadlock()
+    # deadlock()

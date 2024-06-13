@@ -25,7 +25,7 @@ def phantom_reads():
         # Transaction 1 [BEFORE]: REPEATABLE READ
         print(f"Transaction 1 started: {datetime.now()}")
         connection1.start_transaction(isolation_level='REPEATABLE READ')
-        cursor1.execute("SELECT COUNT(*) FROM accounts WHERE name = 'Tom'")
+        cursor1.execute("SELECT COUNT(*) FROM accounts")
         count_phantom_reads = cursor1.fetchone()[0]
 
         print(f"Phantom Read (REPEATABLE READ) BEFORE: count of rows = {count_phantom_reads}")
@@ -39,7 +39,7 @@ def phantom_reads():
 
         # Transaction 1 [AFTER]: REPEATABLE READ
         print(f"Transaction 1 continued: {datetime.now()}")
-        cursor1.execute("SELECT COUNT(*) FROM accounts WHERE name = 'Tom'")
+        cursor1.execute("SELECT COUNT(*) FROM accounts")
         count_phantom_reads = cursor1.fetchone()[0]
 
         print(f"Phantom Read (REPEATABLE READ) AFTER: count of rows = {count_phantom_reads}")

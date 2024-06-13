@@ -17,23 +17,24 @@ def deadlock():
         cursor1 = connection1.cursor()
         cursor2 = connection2.cursor()
 
-        connection1.start_transaction()
-        connection2.start_transaction()
+        connection1.start_transaction(isolation_level='READ UNCOMMITTED')
+        connection2.start_transaction(isolation_level='READ UNCOMMITTED')
 
         # Transaction 1: Deadlock
         print(f"Transaction 1 started: {datetime.now()}")
         cursor1.execute("UPDATE accounts SET balance = 7899 WHERE id = 1")
         cursor1.execute("UPDATE accounts SET balance = 6969 WHERE id = 3")
-        print(f"Transaction 1 commit(): {datetime.now()}")
 
         # Transaction 2: Deadlock
         print(f"Transaction 2 started: {datetime.now()}")
         cursor2.execute("UPDATE accounts SET balance = 6969 WHERE id = 3")
         cursor2.execute("UPDATE accounts SET balance = 7899 WHERE id = 1")
-        print(f"Transaction 2 commit(): {datetime.now()}")
 
         connection1.commit()
+        print(f"Transaction 1 commit(): {datetime.now()}")
+
         connection2.commit()
+        print(f"Transaction 2 commit(): {datetime.now()}")
 
     except Error as e:
         print(f"Error: {e}")
