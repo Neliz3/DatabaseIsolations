@@ -1,7 +1,7 @@
 from read_uncommited import dirty_read
-from read_commited import non_repeatable_read
+from read_commited import non_repeatable_reads
 
 
 if __name__ == "__main__":
     # dirty_read()
-    non_repeatable_read()
+    non_repeatable_reads()

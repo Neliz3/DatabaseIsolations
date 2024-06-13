@@ -4,7 +4,7 @@ from datetime import datetime
 from configs import create_connection
 
 
-def non_repeatable_read():
+def non_repeatable_reads():
     """
     Shows how READ COMMITED isolation level works.
     Shows non-repeatable read.
@@ -18,24 +18,26 @@ def non_repeatable_read():
         cursor1 = connection1.cursor()
         cursor2 = connection2.cursor()
 
-        # Transaction 1: Read Uncommitted
+        # Transaction 1 [BEFORE]: Non-repeatable Reads
         print(f"Transaction 1 started: {datetime.now()}")
-        connection1.start_transaction(isolation_level='READ UNCOMMITTED')
-        cursor1.execute("UPDATE accounts SET balance = 9999 WHERE name = 'Alice'")
+        connection1.start_transaction(isolation_level='READ COMMITTED')
+        cursor1.execute("SELECT balance FROM accounts WHERE name = 'Alice'")
+        balance_non_repeatable_reads = cursor1.fetchone()[0]
 
-        # Transaction 2: Read Uncommitted
+        print(f"Non-repeatable Reads (READ COMMITTED) BEFORE: Alice's balance = {balance_non_repeatable_reads}")
+
+        # Transaction 2: Non-repeatable Reads
         print(f"Transaction 2 started: {datetime.now()}")
-        connection2.start_transaction(isolation_level='READ UNCOMMITTED')
-        cursor2.execute("SELECT balance FROM accounts WHERE name = 'Alice'")
-        balance_dirty_read = cursor2.fetchone()[0]
-
-        print(f"Dirty Read (READ UNCOMMITTED): Alice's balance = {balance_dirty_read}")
-
-        print(f"Transaction 1 rollback(): {datetime.now()}")
-        connection1.rollback()
-
+        connection2.start_transaction(isolation_level='READ COMMITTED')
+        cursor2.execute("UPDATE accounts SET balance = 9999 WHERE name = 'Alice'")
         print(f"Transaction 2 commit(): {datetime.now()}")
         connection2.commit()
+
+        # Transaction 1 [AFTER]: Non-repeatable Reads
+        cursor1.execute("SELECT balance FROM accounts WHERE name = 'Alice'")
+        balance_non_repeatable_reads = cursor1.fetchone()[0]
+
+        print(f"Non-repeatable Reads (READ COMMITTED) AFTER: Alice's balance = {balance_non_repeatable_reads}")
 
     except Error as e:
         print(f"Error: {e}")
