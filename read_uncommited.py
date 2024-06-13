@@ -7,7 +7,7 @@ from configs import create_connection
 def dirty_read():
     """
     Shows how READ UNCOMMITED isolation level works.
-    Shows dirty read.
+    Shows dirty read: access to uncommited data.
     """
     cursor1 = None
     cursor2 = None

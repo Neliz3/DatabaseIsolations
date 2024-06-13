@@ -7,7 +7,7 @@ from configs import create_connection
 def non_repeatable_reads():
     """
     Shows how READ COMMITED isolation level works.
-    Shows non-repeatable read.
+    Shows non-repeatable read: different results during one transaction.
     """
     cursor1 = None
     cursor2 = None
@@ -29,7 +29,7 @@ def non_repeatable_reads():
         # Transaction 2: Non-repeatable Reads
         print(f"Transaction 2 started: {datetime.now()}")
         connection2.start_transaction(isolation_level='READ COMMITTED')
-        cursor2.execute("UPDATE accounts SET balance = 9999 WHERE name = 'Alice'")
+        cursor2.execute("UPDATE accounts SET balance = 7777 WHERE name = 'Alice'")
         print(f"Transaction 2 commit(): {datetime.now()}")
         connection2.commit()
 
