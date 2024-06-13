@@ -1,41 +1,16 @@
-import mysql.connector
-import mysql.connector
 from mysql.connector import Error
-from dotenv import load_dotenv
 from datetime import datetime
-import os
 
-# Load environment variables
-load_dotenv()
-
-# Connection settings
-HOST = os.getenv('host')
-USER = os.getenv('user')
-PASSWORD = os.getenv('password')
-DATABASE = os.getenv('database')
+from configs import create_connection
 
 
-def create_connection():
-    try:
-        connection = mysql.connector.connect(
-            host=HOST,
-            user=USER,
-            password=PASSWORD,
-            database=DATABASE
-        )
-        if connection.is_connected():
-            return connection
-    except Error as e:
-        print(f"Error: {e}")
-    return None
-
-
-def read_uncommited_demo():
+def dirty_read():
     """
     Shows how READ UNCOMMITED isolation level works.
     Shows dirty read.
-    :return: void
     """
+    cursor1 = None
+    cursor2 = None
     connection1 = create_connection()
     connection2 = create_connection()
 
@@ -73,7 +48,3 @@ def read_uncommited_demo():
             cursor2.close()
         if connection2 and connection2.is_connected():
             connection2.close()
-
-
-if __name__ == "__main__":
-    read_uncommited_demo()
